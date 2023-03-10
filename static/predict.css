@@ -1,0 +1,57 @@
+body{
+    margin: 0;
+    padding: 0;
+
+}
+
+.heading{
+    margin-left: 500px;
+}
+
+
+.Twitter{
+    margin-left: 50px;
+
+}
+.text{
+    margin-left: 50px;
+    font-size: large;
+    margin-bottom: -30px;
+
+}
+.tweet-in{
+    margin-top: 50px;
+    width: 200px;
+    height: 30px;
+    margin-left: 30px;
+}
+
+.predict-btn{
+    margin-bottom: 100px;
+    margin-left: 90px;
+    height: 30px;
+    width: 90px;
+
+}
+
+.form-container{
+    position: relative;
+    max-width: 430px;
+    width: 25%;
+    background-color: #ee6a6adf;
+    border-radius: 10px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    margin-top: 60px; 
+    right: 0px;
+    left: 200px;
+    line-height: 70px;
+    margin-left: 350px;
+    margin-bottom: 80px;
+}
+
+.output{
+    margin-left: 620px;
+    border-radius: 10px;
+
+}
