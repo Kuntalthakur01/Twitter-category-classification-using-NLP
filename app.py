@@ -12,6 +12,29 @@ import numpy as np
 model = pickle.load(open("nb_classifier.pkl", "rb"))
 vocabulary = list(model.feature_log_prob_.argsort(axis=1)[:,-1000:][0])
 
+# Create a dictionary to map predicted categories to their corresponding labels
+category_labels = {
+    0: "arts_&_culture",
+    1: "business_&_entrepreneurs",
+    2: "celebrity_&_pop_culture",
+    3: "diaries_&_daily_life",
+    4: "family",
+    5: "fashion_&_style",
+    6: "film_tv_&_video",
+    7: "fitness_&_health",
+    8: "food_&_dining",
+    9: "gaming",
+    10: "learning_&_educational",
+    11: "music",
+    12: "news_&_social_concern",
+    13: "other_hobbies",
+    14: "relationships",
+    15: "science_&_technology",
+    16: "sports",
+    17: "travel_&_adventure",
+    18: "youth_&_student_life"
+}
+
 app = Flask(__name__, template_folder='templates')
 app.secret_key = '18071208'
 
@@ -39,8 +62,8 @@ def predict():
             
             # Make the prediction using the trained model
             category = model.predict(features)[0]
-            print(category)
-            return render_template('predict.html', category=category)
+            category_label = category_labels[category] # Map the predicted category to its corresponding label
+            return render_template('predict.html', category=category_label)
         except KeyError:
             flash('Invalid input. Please enter a valid tweet.')
             return redirect(url_for('predict'))
