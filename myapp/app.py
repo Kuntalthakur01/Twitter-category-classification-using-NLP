@@ -1,6 +1,11 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request,Blueprint
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 import torch  
+from flask import Blueprint
+
+
+
+
 
 app = Flask(__name__)
 MODEL = "cardiffnlp/tweet-topic-21-multi"
