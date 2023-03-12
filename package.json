@@ -1,0 +1,23 @@
+{
+        "name": "Twitter-category-classification-using-NLP",
+        "version": "1.0.0",
+        "description": "",
+        "scripts": {
+            "build": "echo \"No build specified\" && exit 1",
+            "test": "echo \"No test specified\" && exit 1",
+            "start": "node index.js"
+        },
+        "repository": {
+            "type": "git",
+            "url": "git+https://github.com/Kuntalthakur01/Twitter-category-classification-using-NLP.git"
+        },
+        "author": "",
+        "license": "ISC",
+        "bugs": {
+            "url": "https://github.com/Kuntalthakur01/Twitter-category-classification-using-NLP/issues"
+        },
+        "homepage": "https://github.com/Kuntalthakur01/Twitter-category-classification-using-NLP#readme"
+    }
+     
+    
+    
