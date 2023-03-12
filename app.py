@@ -1,18 +1,15 @@
-from flask import Flask, render_template, flash, redirect, url_for, request
-import pickle
-import re
-import nltk
-from nltk.tokenize import word_tokenize
-import ssl
-ssl._create_default_https_context = ssl._create_unverified_context
-nltk.download('punkt')
-import numpy as np
+from flask import Flask, render_template, request
+from transformers import AutoTokenizer, AutoModelForSequenceClassification
+import torch  
 
-# Load the trained model and any pre-processing steps
-model = pickle.load(open("nb_classifier.pkl", "rb"))
-vocabulary = list(model.feature_log_prob_.argsort(axis=1)[:,-1000:][0])
+app = Flask(__name__)
+MODEL = "cardiffnlp/tweet-topic-21-multi"
+tokenizer = AutoTokenizer.from_pretrained(MODEL)
 
-# Create a dictionary to map predicted categories to their corresponding labels
+# PT
+model = AutoModelForSequenceClassification.from_pretrained(MODEL)
+class_mapping = model.config.id2label
+
 category_labels = {
     0: "arts_&_culture",
     1: "business_&_entrepreneurs",
@@ -35,41 +32,19 @@ category_labels = {
     18: "youth_&_student_life"
 }
 
-app = Flask(__name__, template_folder='templates')
-app.secret_key = '18071208'
-
-def tokenizer(text):
-    tokens = word_tokenize(text)
-    return tokens
-
-@app.route("/", methods=['GET', 'POST'])
+@app.route('/', methods=["GET", "POST"])
 def predict():
-    if request.method == 'POST':
-        try:
-            tweet = request.form['tweet']
-            # Preprocess the user input using the same steps used in training
-            tweet = re.sub(r'http\S+', '', tweet)  # remove URLs
-            tweet = re.sub(r'@[^\s]+', '', tweet)  # remove usernames
-            tweet = tweet.lower()  # convert to lowercase
-            tokens = tokenizer(tweet)  # tokenize the tweet
-
-            # Convert the tokens to a one-hot encoding
-            features = np.zeros((1, len(vocabulary)))
-            for token in tokens:
-                if token in vocabulary:
-                    index = vocabulary.index(token)
-                    features[0][index] = 1
-            
-            # Make the prediction using the trained model
-            category = model.predict(features)[0]
-            category_label = category_labels[category] # Map the predicted category to its corresponding label
-            return render_template('predict.html', category=category_label)
-        except KeyError:
-            flash('Invalid input. Please enter a valid tweet.')
-            return redirect(url_for('predict'))
-    
-    return render_template('predict.html')
-
+    if request.method == "POST":
+        tweet = request.form["tweet"]
+        inputs = tokenizer.encode_plus(tweet, return_tensors="pt", truncation=True, padding=True)
+        outputs = model(**inputs)
+        logits = outputs.logits
+        probabilities = torch.softmax(logits, dim=1).detach().cpu().numpy()[0]
+        category_id = int(torch.argmax(logits, axis=1).detach().cpu().numpy()[0])
+        category = category_labels[category_id]
+        return render_template('predict.html', tweet=tweet, category=category, probabilities=probabilities)
+    else:
+        return render_template('predict.html')
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()

@@ -15,7 +15,7 @@
     <div class="heading">
         <h1> Twitter tweets genres prediction</h1>
     </div>
-    <form action="/" method="POST" class="form-container">
+    <form action="{{ url_for('predict') }}" method="POST" class="form-container">
         <div class="Twitter">
             <p class="text">Enter your tweet here : </p>
             <input type="text" class="tweet-in" name="tweet">
