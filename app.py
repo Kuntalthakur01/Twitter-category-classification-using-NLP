@@ -42,9 +42,9 @@ def predict():
         probabilities = torch.softmax(logits, dim=1).detach().cpu().numpy()[0]
         category_id = int(torch.argmax(logits, axis=1).detach().cpu().numpy()[0])
         category = category_labels[category_id]
-        return render_template('predict.html', tweet=tweet, category=category, probabilities=probabilities)
+        return render_template('index.html', tweet=tweet, category=category, probabilities=probabilities)
     else:
-        return render_template('predict.html')
+        return render_template('index.html')
 
 if __name__ == '__main__':
     app.run()
